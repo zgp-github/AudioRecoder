@@ -5,6 +5,7 @@
 #include <QtCharts/QChartGlobal>
 #include <QMainWindow>
 #include <QComboBox>
+#include <QFile>
 
 
 QT_CHARTS_BEGIN_NAMESPACE
@@ -31,11 +32,13 @@ public:
 
 private:
     void init_ui();
+    void init_data();
     void init_signal();
     QChart *m_chart;
     XYSeriesIODevice *m_device = nullptr;
     QLineSeries *m_series ;
     QAudioInput *m_audioInput = nullptr;
+    QAudioInput *m_audioInput2 = nullptr;
 
 private:
     QAudioFormat formatAudio;
@@ -45,7 +48,8 @@ private:
 
 private:
     bool recording = false;
-    char *audio_data;
+    QByteArray *rawdata;
+    QFile *filename;
 
 private slots:
     void start_record();

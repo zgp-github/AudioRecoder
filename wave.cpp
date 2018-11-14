@@ -4,28 +4,40 @@
 #include <QAudioFormat>
 #include <QByteArray>
 #include <QFile>
+#include <QDebug>
+#include <qdebug.h>
 
-#define WAVE_FORMAT_PCM int(1)
+#define WAVE_FORMAT_PCM WORD(1)
+
+wave::wave()
+{
+
+}
+
+wave::~wave()
+{
+
+}
 
 void wave::saveWave(const QString &fileName, const QByteArray &raw, const QAudioFormat &format)
 {
     typedef struct{
-        char riff_fileid[4];//"RIFF"
-        DWORD riff_fileLen;
-        char waveid[4];//"WAVE"
+        char riff_fileid[4];//"RIFF" 4Byte
+        DWORD riff_fileLen; // 4Byte
+        char waveid[4];//"WAVE" 4Byte
 
-        char fmt_chkid[4];//"fmt"
-        DWORD fmt_chkLen;
+        char fmt_chkid[4];//"fmt" 4Byte
+        DWORD fmt_chkLen; // 4Byte
 
-        WORD    wFormatTag;        /* format type */
-        WORD    nChannels;         /* number of channels (i.e. mono, stereo, etc.) */
-        DWORD   nSamplesPerSec;    /* sample rate */
-        DWORD   nAvgBytesPerSec;   /* for buffer estimation */
-        WORD    nBlockAlign;       /* block size of data */
-        WORD    wBitsPerSample;
+        WORD    wFormatTag;        /* format type 2Byte*/
+        WORD    nChannels;         /* number of channels (i.e. mono, stereo, etc.) 2Byte*/
+        DWORD   nSamplesPerSec;    /* sample rate 4Byte*/
+        DWORD   nAvgBytesPerSec;   /* for buffer estimation 4Byte*/
+        WORD    nBlockAlign;       /* block size of data 2Byte*/
+        WORD    wBitsPerSample; // 2Byte
 
-        char data_chkid[4];//"DATA"
-        WORD data_chkLen;
+        char data_chkid[4];//"DATA" 4Byte
+        DWORD data_chkLen; // 4Byte
     }WaveHeader;
 
     WaveHeader wh = {0};
@@ -40,11 +52,11 @@ void wave::saveWave(const QString &fileName, const QByteArray &raw, const QAudio
     wh.nChannels = WORD(format.channelCount());
     wh.nSamplesPerSec = DWORD(format.sampleRate());
     wh.wBitsPerSample = WORD(format.sampleSize());
-    wh.nBlockAlign =wh.nChannels*wh.wBitsPerSample/8;
-    wh.nAvgBytesPerSec =   wh.nBlockAlign*wh.nSamplesPerSec;
+    wh.nBlockAlign = (wh.nChannels*wh.wBitsPerSample)/8;
+    wh.nAvgBytesPerSec = wh.nBlockAlign*wh.nSamplesPerSec;
 
     strcpy(wh.data_chkid, "data");
-    wh.data_chkLen = WORD(raw.length());
+    wh.data_chkLen = DWORD(raw.length());
 
     QFile f(fileName);
     f.open(QFile::WriteOnly);
