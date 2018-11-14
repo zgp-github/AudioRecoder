@@ -42,3 +42,8 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RC_FILE = logo.rc
+
+RESOURCES += \
+    resource/audiorecorder.qrc

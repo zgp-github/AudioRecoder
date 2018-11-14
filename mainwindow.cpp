@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent):
     this->setFixedSize(900, 600);
     this->setWindowTitle(tr("录音APP (Created by Evin 2018-11-13)"));
 
+    init_ui();
+
     QChartView *chartView = new QChartView(m_chart);
     chartView->setMinimumSize(900, 600);
     m_chart->addSeries(m_series);
@@ -115,6 +117,11 @@ MainWindow::MainWindow(QWidget *parent):
     connect(button_stop, SIGNAL(clicked()), this, SLOT(stop_record()));
 
     init_data();
+}
+
+void MainWindow::init_ui()
+{
+    setWindowIcon(QIcon(":/dotio.ico"));
 }
 
 void MainWindow::init_data()
@@ -246,10 +253,9 @@ void MainWindow::stop_record()
     filename->open(QIODevice::ReadOnly);
     QByteArray *data = new QByteArray();
     *data = filename->readAll();
-    qDebug() << "data.length:";
-    qDebug() << data->length();
 
     w->saveWave(name, *data, formatAudio);
+    delete w;
     filename->close();
     filename->remove();
 
