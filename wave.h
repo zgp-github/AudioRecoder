@@ -5,6 +5,9 @@
 #include <QAudioFormat>
 #include <QByteArray>
 
+typedef unsigned short WORD;
+typedef unsigned long DWORD;
+
 class wave
 {
 public:

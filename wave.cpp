@@ -1,11 +1,10 @@
-﻿#include <windef.h>
-#include "wave.h"
-#include <QString>
+﻿#include <QString>
 #include <QAudioFormat>
 #include <QByteArray>
 #include <QFile>
 #include <QDebug>
 #include <qdebug.h>
+#include "wave.h"
 
 #define WAVE_FORMAT_PCM WORD(1)
 
@@ -40,7 +39,7 @@ void wave::saveWave(const QString &fileName, const QByteArray &raw, const QAudio
         DWORD data_chkLen; // 4Byte
     }WaveHeader;
 
-    WaveHeader wh = {0};
+    WaveHeader wh;
     strcpy(wh.riff_fileid, "RIFF");
     wh.riff_fileLen = DWORD(raw.length() + 32);
     strcpy(wh.waveid, "WAVE");
@@ -52,15 +51,15 @@ void wave::saveWave(const QString &fileName, const QByteArray &raw, const QAudio
     wh.nChannels = WORD(format.channelCount());
     wh.nSamplesPerSec = DWORD(format.sampleRate());
     wh.wBitsPerSample = WORD(format.sampleSize());
-    wh.nBlockAlign = (wh.nChannels*wh.wBitsPerSample)/8;
-    wh.nAvgBytesPerSec = wh.nBlockAlign*wh.nSamplesPerSec;
+    wh.nBlockAlign = (wh.nChannels * wh.wBitsPerSample)/8;
+    wh.nAvgBytesPerSec = wh.nBlockAlign * wh.nSamplesPerSec;
 
     strcpy(wh.data_chkid, "data");
     wh.data_chkLen = DWORD(raw.length());
 
     QFile f(fileName);
     f.open(QFile::WriteOnly);
-    f.write((char *)&wh, sizeof(wh));
+    f.write((char*)&wh, sizeof(wh));
     f.write(raw);
     f.close();
 }

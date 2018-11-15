@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QByteArray>
+#include <QDir>
 
 #include <QDebug>
 #include <qdebug.h>
@@ -121,7 +122,7 @@ MainWindow::MainWindow(QWidget *parent):
 
 void MainWindow::init_ui()
 {
-    setWindowIcon(QIcon(":/dotio.ico"));
+    setWindowIcon(QIcon(":/icon.ico"));
 }
 
 void MainWindow::init_data()
@@ -225,7 +226,7 @@ void MainWindow::start_record()
     m_audioInput->start(m_device);
 
     filename = new QFile;
-    filename->setFileName("D:/wave.raw");
+    filename->setFileName(QDir::tempPath() + "/wave_tmp.raw");
     filename->open(QIODevice::WriteOnly);
     m_audioInput2->start(filename);
 }
@@ -247,7 +248,7 @@ void MainWindow::stop_record()
     QString localTime = local.toString("yyyy-MM-dd_hhmmss");
     name = localTime + ".wav";
 
-    name = ("D:/"+name);
+    name = (QDir::homePath() + "/Music/" + name);
     wave* w = new wave();
 
     filename->open(QIODevice::ReadOnly);

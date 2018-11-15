@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>dotio.ico</file>
+        <file>icon.ico</file>
     </qresource>
 </RCC>
